@@ -1,0 +1,385 @@
+
+
+#:import sys sys
+
+#:import MapSource kivy.garden.mapview.MapSource
+
+#: import MDBottomNavigation kivymd.bottomnavigation.MDBottomNavigation
+
+#:import MDToolbar kivymd.toolbar.MDToolbar
+
+#:import MDRaisedButton kivymd.button.MDRaisedButton
+
+#:import MDLabel kivymd.label.MDLabel
+
+#:import MDTextField kivymd.textfields.MDTextField
+
+#:import MDFillRoundFlatButton kivymd.button.MDFillRoundFlatButton
+
+#:import MDFloatingActionButton kivymd.button.MDFloatingActionButton
+
+
+
+
+<Uniquelabel@Label>:
+    font_size: "7dp"
+    halign:"center"
+    bg_color:(0.6,0.45,0.45,0.7)
+    canvas.before:
+        Color:
+            rgba:self.bg_color
+        Rectangle:
+            size:self.size
+            pos:self.pos
+             #(0.5,0.6,0.3,1) green color
+    
+
+        
+
+BoxLayout:
+    orientation:'vertical'
+
+    MDToolbar:
+        id: toolbar
+        title: app.title
+        md_bg_color: app.theme_cls.primary_color
+        background_palette: 'Primary'
+        background_hue: '500'
+        elevation: 10
+        anchor_title:"center"
+        left_action_items: [['airballoon', lambda x: app.about()]]
+        right_action_items: [['settings-outline', lambda x: app.open_settings()],['exit-run', lambda x: app.stop()]]
+
+    MDBottomNavigation:
+
+        MDBottomNavigationItem:
+            name: 'files1'
+            text: 'Home'
+            icon: 'home-circle'
+            FloatLayout:
+                id:first_view
+                size_hint:1,1
+                pos_hint:{"top":1,"right":1}
+                AsyncImage:
+                    id:offline_pic
+                    source:"offline.jpeg"
+                    pos_hint:{"top":0.985,"center_x":0.5}
+                    
+                MapView:
+                    id: map_drawn
+                    lat:-1.2833
+                    lon: 36.866
+                    zoom: 10
+                    snap_to_zoom: False
+                    map_source: MapSource(sys.argv[1], attribution="") if len(sys.argv) > 1 else "osm"
+                    size_hint: 0.98,0.8
+                    pos_hint:{"top":0.985,"center_x":0.5}
+                
+                    MapMarkerPopup:
+                        id: markers
+                        lat:map_drawn.lat
+                        lon: map_drawn.lon
+                        popup_size: dp(250), dp(120)
+                
+                        Bubble:
+                            BoxLayout:
+                                orientation: "horizontal"
+                                size_hint_y: None
+                                height:"100dp"
+                                padding: "5dp","5dp"
+                                spacing: 3
+                                AsyncImage:
+                                    id:weather_icons
+                                    source: "icon.png"
+                                    #"http://
+                                    mipmap: True
+                                MDLabel:
+                                    id:current_weather_location_time
+                                    text: "weather status\nmean temperature°c,\location"
+                                    font_style:"Button"
+                                    halign:"center"
+                                    theme_text_color: "Custom"
+                                    text_color:(1,1,1,1)
+                                    font_name:"RobotoBlack"
+                                    bold:True     
+                MDLabel:
+                    id:_today
+                    text:""
+                    pos_hint:{"top":0.25,"center_x":0.5}
+                    size_hint:1,0.3
+                    font_style:"H6"
+                    halign:"center"
+                    theme_text_color: "Custom"
+                    text_color:(1,1,1,1)
+                    font_name:"RobotoBlack"
+                    bolditalic:True                            
+                    
+                                 
+                    
+        MDBottomNavigationItem:
+            name: 'weather_scrn'
+            text: 'weather'
+            icon: 'chart-line-stacked'
+            FloatLayout:
+                size_hint:1,1
+                pos_hint:{"top":1,"right":1}
+                BoxLayout:
+                    pos_hint:{"top":0.14,"center_x":0.5}
+                    padding:10,10
+                    spacing:10,10
+                    size_hint_y: 0.12
+                    MDLabel:
+                        id:refresh
+                        text:"  press button to receive current weather details"
+                        halign:"center"
+                        font_style:"Caption"
+                        theme_text_color: "Custom"
+                        text_color:(0.6,0.45,0.45,1)
+                        font_name:"RobotoBlack"
+                        bold:True
+                        
+                        MDFloatingActionButton:
+                            icon:"autorenew"
+                            #pos_hint:{"top":1,"right":0.98}
+                            on_release: app.online_view()
+                            #main_location_weather()
+                            
+                ScrollView:
+                    do_scroll_x: False
+                    size_hint:1,0.8
+                    pos_hint:{"top":0.98,"center_x":0.5}
+                    GridLayout:
+                        cols:2
+                        size_hint_y: None
+                        height: self.minimum_height
+                        row_default_height: "70dp"
+                        row_force_default: True
+                        #pos_hint:{"top":0.99,"right":1}
+                        padding: 15,15
+                        spacing: 10
+                        AsyncImage:
+                            id:weather_icon
+                            source:"icon.png"
+                        MDLabel:
+                            id:time_location
+                            text:"location weather at certain time"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:current_weather
+                            text:"current weather"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:sun_rise
+                            text:"sun up"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:sun_set
+                            text:"sun down"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:max_temp
+                            text:"maximum temp °c"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:min_temp
+                            text:"minimum temp °c"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:viz
+                            text:"visible distance metres"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:humidity
+                            text:"humidity\n%"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:wind_speed
+                            text:"wind speed m/s"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:wind_degree
+                            text:"wimd degree"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:pressure
+                            text:"Atmospheric pressure"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:clouds
+                            text:"clouds cover"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                        MDLabel:
+                            id:rainfall
+                            text:"rainfall volume mm/hr"
+                            font_style:"Button"
+                            theme_text_color: "Custom"
+                            text_color:(1,1,1,1)
+                            font_name:"RobotoBlack"
+                            bold:True
+                            halign:"center"
+                    
+                
+        MDBottomNavigationItem:
+            name: 'search_scrn'
+            text: 'search'
+            icon: 'magnify'
+            FloatLayout:
+                id: searching
+                size_hint:1,1
+                pos_hint:{"top":1,"right":1}
+                MDTextField:
+                    id:city_name
+                    size_hint_x: 0.9
+                    text:''
+                    pos_hint: {'top': 0.97, 'center_x': 0.5}
+                    hint_text: "Location name e.g Nairobi,Kenya"
+                    helper_text:"type location name,correctly to avoid getting errors"
+                    helper_text_mode:"persistent"
+                    theme_text_color: "Custom"
+                    text_color:(1,1,1,1)
+                    required:True
+                    line_color_normal:(1,1,1,1)
+                    #on_focus: self.text=""
+                    #on_text_validate: if enter is pressed
+                            
+                            
+                MDFillRoundFlatButton:
+                    id:search
+                    text:"Search"
+                    pos_hint: {'center_x': .5, 'center_y': .76}
+                    md_bg_color: app.theme_cls.accent_color
+                    theme_text_color: "Custom"
+                    text_color:(0,0,0,1)
+                    on_release: app.raise_output(searched_location_input)
+                GridLayout:
+                    id: searched_location_input
+                    size_hint:1,0.4
+                    bring_up:0
+                    pos_hint:{'top': self.bring_up, 'center_x': 0.5}
+                    rows:2
+                    padding: 15,15
+                    canvas.before:
+                        Color:
+                            rgba:(0.6,0.45,0.45,0.7)
+                        Rectangle:
+                            pos:self.pos
+                            size:self.size
+                    MDLabel:
+                        id:results_label
+                        text:"searched location, time,weather status,average temperature,"
+                        font_style:"Button"
+                        theme_text_color: "Custom"
+                        text_color:(1,1,1,1)
+                        font_name:"RobotoBlack"
+                        halign:"center"
+                    GridLayout:
+                        cols:2
+                        spacing: 30
+                        #MDRaise
+                        MDRaisedButton:
+                            text:"Clear"
+                            on_release: app.drop_output(searched_location_input)
+            
+            
+        MDBottomNavigationItem:
+            name: 'data_scrn'
+            text: 'Data'
+            icon: 'database-check'
+            FloatLayout:
+                size_hint:1,1
+                pos_hint:{"top":1,"right":1}
+                BoxLayout:
+                    pos_hint:{"top":0.995,"center_x":0.5}
+                    size_hint_y:0.1
+                    MDLabel:
+                        id:timelinelabel
+                        text:"Default location, daily weather forecats after every 3 hours"
+                        font_style:"Caption"
+                        halign:"center"
+                        theme_text_color: "Custom"
+                        text_color:(1,1,1,1)
+                        font_name:"RobotoMedium"
+                        bold:True  
+                    #MDFillRoundFlatButton:
+#                        id:update_forecast
+#                        text:"Get pdf"
+#                        md_bg_color: app.theme_cls.accent_color
+#                        theme_text_color: "Custom"
+#                        text_color:(1,1,1,1), to be used to print data in pdf
+                RecycleView:
+                    size_hint:1,0.885
+                    viewclass:"Uniquelabel"
+                    id:data_records
+                    RecycleGridLayout:
+                        id:table_layout
+                        default_size:(None,200)
+                        default_size_hint:(1,None)
+                        size_hint_y:None
+                        height:self.minimum_height
+                        spacing:10,10
+                        padding:10,20
+                        
+                       
+                                        
+                        
+                        

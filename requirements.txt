@@ -1,0 +1,8 @@
+geocoder==1.38.1
+Kivy==1.11.0.dev0
+Kivy-Garden==0.1.4
+kivymd==0.100.2
+requests==2.22.0
+pyowm==2.10.0
+plyer==1.4.2
+python-decouple==3.3
